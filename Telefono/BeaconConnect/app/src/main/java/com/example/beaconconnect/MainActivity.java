@@ -215,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
         //this.buscarEsteDispositivoBTLE( Utilidades.stringToUUID( "EPSG-GTI-PROY-3A" ) );
 
         //this.buscarEsteDispositivoBTLE( "EPSG-GTI-PROY-3A" );
-        this.buscarEsteDispositivoBTLE( "Alvaro" );
+        this.buscarEsteDispositivoBTLE( "David");
 
     } // ()
 
@@ -284,6 +284,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(ETIQUETA_LOG, " onCreate(): empieza ");
 
         checkBluetoothPermissions();
+        inicializarBlueTooth();
 
         Log.d(ETIQUETA_LOG, " onCreate(): termina ");
 
