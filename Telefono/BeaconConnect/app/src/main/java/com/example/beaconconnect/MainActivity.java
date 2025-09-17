@@ -23,6 +23,7 @@ import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 // ------------------------------------------------------------------
@@ -84,8 +85,7 @@ public class MainActivity extends AppCompatActivity {
 
     // --------------------------------------------------------------
     // --------------------------------------------------------------
-    private void mostrarInformacionDispositivoBTLE( ScanResult resultado ) {
-
+    private void mostrarInformacionDispositivoBTLE(ScanResult resultado) {
         BluetoothDevice bluetoothDevice = resultado.getDevice();
         byte[] bytes = resultado.getScanRecord().getBytes();
         int rssi = resultado.getRssi();
@@ -96,51 +96,61 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             Log.d(ETIQUETA_LOG, " nombre = " + bluetoothDevice.getName());
-        }catch (SecurityException e){
+        } catch (SecurityException e) {
             Log.e(ETIQUETA_LOG, "No tienes permisos suficientes para inicializar Bluetooth", e);
         }
-
         Log.d(ETIQUETA_LOG, " toString = " + bluetoothDevice.toString());
-
-        /*
-        ParcelUuid[] puuids = bluetoothDevice.getUuids();
-        if ( puuids.length >= 1 ) {
-            //Log.d(ETIQUETA_LOG, " uuid = " + puuids[0].getUuid());
-           // Log.d(ETIQUETA_LOG, " uuid = " + puuids[0].toString());
-        }*/
-
         Log.d(ETIQUETA_LOG, " dirección = " + bluetoothDevice.getAddress());
-        Log.d(ETIQUETA_LOG, " rssi = " + rssi );
+        Log.d(ETIQUETA_LOG, " rssi = " + rssi);
 
         Log.d(ETIQUETA_LOG, " bytes = " + new String(bytes));
         Log.d(ETIQUETA_LOG, " bytes (" + bytes.length + ") = " + Utilidades.bytesToHexString(bytes));
 
-        // Log raw bytes for debugging
-        Log.d(ETIQUETA_LOG, " Raw bytes length: " + bytes.length);
-        for (int i = 0; i < bytes.length; i++) {
-            Log.d(ETIQUETA_LOG, " Byte [" + i + "] = " + String.format("0x%02X", bytes[i]));
-        }
-
         TramaIBeacon tib = new TramaIBeacon(bytes);
 
-        Log.d(ETIQUETA_LOG, " ----------------------------------------------------");
-        Log.d(ETIQUETA_LOG, " prefijo  = " + Utilidades.bytesToHexString(tib.getPrefijo()));
-        Log.d(ETIQUETA_LOG, "          advFlags = " + Utilidades.bytesToHexString(tib.getAdvFlags()));
-        Log.d(ETIQUETA_LOG, "          advHeader = " + Utilidades.bytesToHexString(tib.getAdvHeader()));
-        Log.d(ETIQUETA_LOG, "          companyID = " + Utilidades.bytesToHexString(tib.getCompanyID()));
-        Log.d(ETIQUETA_LOG, "          iBeacon type = " + Integer.toHexString(tib.getiBeaconType()));
-        Log.d(ETIQUETA_LOG, "          iBeacon length 0x = " + Integer.toHexString(tib.getiBeaconLength()) + " ( "
-                + tib.getiBeaconLength() + " ) ");
-        Log.d(ETIQUETA_LOG, " uuid  = " + Utilidades.bytesToHexString(tib.getUUID()));
-        Log.d(ETIQUETA_LOG, " uuid  = " + Utilidades.bytesToString(tib.getUUID()));
-        Log.d(ETIQUETA_LOG, " major  = " + Utilidades.bytesToHexString(tib.getMajor()) + "( "
-                + Utilidades.bytesToInt(tib.getMajor()) + " ) ");
-        Log.d(ETIQUETA_LOG, " minor  = " + Utilidades.bytesToHexString(tib.getMinor()) + "( "
-                + Utilidades.bytesToInt(tib.getMinor()) + " ) ");
-        Log.d(ETIQUETA_LOG, " txPower  = " + Integer.toHexString(tib.getTxPower()) + " ( " + tib.getTxPower() + " )");
-        Log.d(ETIQUETA_LOG, " ****************************************************");
+        if (tib.getUUID() != null) {
+            Log.d(ETIQUETA_LOG, " ----------------------------------------------------");
+            Log.d(ETIQUETA_LOG, " prefijo  = " + Utilidades.bytesToHexString(tib.getPrefijo()));
+            Log.d(ETIQUETA_LOG, "          advFlags = " + Utilidades.bytesToHexString(tib.getAdvFlags()));
+            Log.d(ETIQUETA_LOG, "          advHeader = " + Utilidades.bytesToHexString(tib.getAdvHeader()));
+            Log.d(ETIQUETA_LOG, "          companyID = " + Utilidades.bytesToHexString(tib.getCompanyID()));
+            Log.d(ETIQUETA_LOG, "          iBeacon type = " + Integer.toHexString(tib.getiBeaconType()));
+            Log.d(ETIQUETA_LOG, "          iBeacon length 0x = " + Integer.toHexString(tib.getiBeaconLength()) + " ( "
+                    + tib.getiBeaconLength() + " ) ");
+            Log.d(ETIQUETA_LOG, " uuid  = " + Utilidades.bytesToHexString(tib.getUUID()));
+            Log.d(ETIQUETA_LOG, " uuid  = " + Utilidades.bytesToString(tib.getUUID()));
+            Log.d(ETIQUETA_LOG, " major  = " + Utilidades.bytesToHexString(tib.getMajor()) + "( "
+                    + Utilidades.bytesToInt(tib.getMajor()) + " ) ");
+            Log.d(ETIQUETA_LOG, " minor  = " + Utilidades.bytesToHexString(tib.getMinor()) + "( "
+                    + Utilidades.bytesToInt(tib.getMinor()) + " ) ");
+            Log.d(ETIQUETA_LOG, " txPower  = " + Integer.toHexString(tib.getTxPower()) + " ( " + tib.getTxPower() + " )");
 
-    } // ()
+            // Procesamos la trama para obtener mediciones filtradas
+            Map<String, Integer> medicion = FiltroMedicionesIBeacon.procesarTrama(tib);
+
+            if (medicion.containsKey("co2")) {
+                int co2 = medicion.get("co2");
+                Log.d(ETIQUETA_LOG, "Medición CO2 = " + co2);
+                // Mostrar en pantalla o enviar a DB
+            }
+
+            if (medicion.containsKey("temperatura")) {
+                int temp = medicion.get("temperatura");
+                Log.d(ETIQUETA_LOG, "Medición Temperatura = " + temp);
+                // Mostrar en pantalla o enviar a DB
+            }
+
+            if (medicion.containsKey("ruido")) {
+                int ruido = medicion.get("ruido");
+                Log.d(ETIQUETA_LOG, "Medición ruido = " + ruido);
+                // Mostrar en pantalla o enviar a DB
+            }
+
+            Log.d(ETIQUETA_LOG, " ****************************************************");
+        }else {
+            Log.d(ETIQUETA_LOG, "UUID no valido");
+        }
+    }
 
     // --------------------------------------------------------------
     // --------------------------------------------------------------
@@ -219,12 +229,10 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             this.elEscanner.stopScan( this.callbackDelEscaneo );
+            this.callbackDelEscaneo = null;
         }catch (SecurityException e){
             Log.e(ETIQUETA_LOG, "No tienes permisos suficientes para inicializar Bluetooth", e);
         }
-
-        this.callbackDelEscaneo = null;
-
     } // ()
 
     // --------------------------------------------------------------
@@ -277,7 +285,6 @@ public class MainActivity extends AppCompatActivity {
 
         if ( this.elEscanner == null ) {
             Log.d(ETIQUETA_LOG, " inicializarBlueTooth(): Socorro: NO hemos obtenido escaner btle  !!!!");
-
         }
 
         Log.d(ETIQUETA_LOG, " inicializarBlueTooth(): voy a perdir permisos (si no los tuviera) !!!!");

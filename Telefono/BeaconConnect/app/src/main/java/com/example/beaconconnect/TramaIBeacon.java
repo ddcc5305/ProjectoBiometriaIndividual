@@ -1,12 +1,14 @@
 package com.example.beaconconnect;
 
-import java.util.Arrays;
+import android.util.Log;
 
+import java.util.Arrays;
 // -----------------------------------------------------------------------------------
 // @author: Jordi Bataller i Mascarell
 // -----------------------------------------------------------------------------------
 public class TramaIBeacon {
-    private byte[] prefijo = null; // 9 bytes
+    private static final String ETIQUETA_LOG = ">>>>";
+    private byte[] prefijo = null; // 6 bytes: length, type, companyID, iBeacon type, iBeacon length
     private byte[] uuid = null; // 16 bytes
     private byte[] major = null; // 2 bytes
     private byte[] minor = null; // 2 bytes
@@ -17,9 +19,37 @@ public class TramaIBeacon {
     private byte[] advFlags = null; // 3 bytes
     private byte[] advHeader = null; // 2 bytes
     private byte[] companyID = new byte[2]; // 2 bytes
-    private byte iBeaconType = 0 ; // 1 byte
-    private byte iBeaconLength = 0 ; // 1 byte
+    private byte iBeaconType = 0; // 1 byte
+    private byte iBeaconLength = 0; // 1 byte
 
+    public TramaIBeacon(byte[] bytes) {
+        this.losBytes = bytes;
+
+        // Validate packet length
+        if (bytes == null || bytes.length < 27) {
+            Log.e(ETIQUETA_LOG, "TramaIBeacon: Insufficient data length (" + (bytes == null ? 0 : bytes.length) + ")");
+            return;
+        }
+
+        // Check iBeacon signature: Company ID (0x4C 0x00), iBeacon Type (0x02), iBeacon Length (0x15)
+        if (bytes[2] == 0x4C && bytes[3] == 0x00 && bytes[4] == 0x02 && bytes[5] == 0x15) {
+            prefijo = Arrays.copyOfRange(losBytes, 0, 5 + 1); // 6 bytes: length, type, companyID, iBeacon type, length
+            advFlags = Arrays.copyOfRange(bytes, 0, 3); // 2 bytes
+            advHeader = Arrays.copyOfRange(losBytes, 0, 1 + 1); // 2 bytes: length (0x1A), type (0xFF)
+            companyID = Arrays.copyOfRange(losBytes, 2, 3 + 1); // 2 bytes: 0x4C 0x00
+            iBeaconType = losBytes[4]; // 1 byte: 0x02
+            iBeaconLength = losBytes[5]; // 1 byte: 0x15
+            uuid = Arrays.copyOfRange(losBytes, 6, 21 + 1); // 16 bytes
+            major = Arrays.copyOfRange(losBytes, 22, 23 + 1); // 2 bytes
+            minor = Arrays.copyOfRange(losBytes, 24, 25 + 1); // 2 bytes
+
+            txPower = losBytes[26]; // 1 byte
+        } else {
+            Log.e(ETIQUETA_LOG, "TramaIBeacon: Not an iBeacon packet");
+        }
+    }
+
+    // Getters
     // -------------------------------------------------------------------------------
     // -------------------------------------------------------------------------------
     public byte[] getPrefijo() {
@@ -84,30 +114,9 @@ public class TramaIBeacon {
     // -------------------------------------------------------------------------------
     public byte getiBeaconLength() {
         return iBeaconLength;
-    }
-
-    // -------------------------------------------------------------------------------
-    // -------------------------------------------------------------------------------
-    public TramaIBeacon(byte[] bytes ) {
-        this.losBytes = bytes;
-
-        prefijo = Arrays.copyOfRange(losBytes, 0, 8+1 ); // 9 bytes
-        uuid = Arrays.copyOfRange(losBytes, 9, 24+1 ); // 16 bytes
-        major = Arrays.copyOfRange(losBytes, 25, 26+1 ); // 2 bytes
-        minor = Arrays.copyOfRange(losBytes, 27, 28+1 ); // 2 bytes
-        txPower = losBytes[ 29 ]; // 1 byte
-
-        advFlags = Arrays.copyOfRange( prefijo, 0, 2+1 ); // 3 bytes
-        advHeader = Arrays.copyOfRange( prefijo, 3, 4+1 ); // 2 bytes
-        companyID = Arrays.copyOfRange( prefijo, 5, 6+1 ); // 2 bytes
-        iBeaconType = prefijo[ 7 ]; // 1 byte
-        iBeaconLength = prefijo[ 8 ]; // 1 byte
-
     } // ()
 } // class
 // -----------------------------------------------------------------------------------
 // -----------------------------------------------------------------------------------
 // -----------------------------------------------------------------------------------
 // -----------------------------------------------------------------------------------
-
-
