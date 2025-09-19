@@ -130,7 +130,9 @@ public class MainActivity extends AppCompatActivity {
 
             if (medicion.containsKey("co2")) {
                 int co2 = medicion.get("co2");
+                int contador = medicion.get("contador");
                 Log.d(ETIQUETA_LOG, "Medición CO2 = " + co2);
+                Log.d(ETIQUETA_LOG, "Contador = " + contador);
                 // Mostrar en pantalla o enviar a DB
             }
 
