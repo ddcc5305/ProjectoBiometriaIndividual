@@ -1,36 +1,41 @@
-﻿using System;
+﻿using PaginaMedicionesBiometriaIndividual;
+using System;
 using System.Collections.Generic;
-using System.Web.Services;
 
-namespace PaginaMedicionesBiometriaIndividual {
+namespace PaginaMedicionesBiometriaIndividual
+{
     public partial class Mediciones : System.Web.UI.Page
     {
-        private static BaseDatos db;
+        private RestServidor rest;
 
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
-                string dbFilePath = Server.MapPath("~/mediciones.db");
-                db = new BaseDatos(dbFilePath);
-
-                var lista = db.ObtenerMediciones();
+                InicializarRest();
+                RefrescarGrid();
             }
         }
 
-        [WebMethod]
-        public static List<Medida> ObtenerMediciones()
+        private void InicializarRest()
         {
-            return db.ObtenerMediciones();
+            if (rest == null)
+            {
+                string dbFilePath = Server.MapPath("~/mediciones.db");
+                rest = new RestServidor(dbFilePath);
+            }
         }
 
-        [WebMethod]
-        public static string AgregarMedida(Medida m)
+        private void RefrescarGrid()
         {
-            if (m == null) return "JSON inválido";
+            GridViewMediciones.DataSource = rest.ObtenerMediciones();
+            GridViewMediciones.DataBind();
+        }
 
-            db.AgregarMedida(m);
-            return "Medida agregada correctamente";
+        protected void BtnRefrescar_Click(object sender, EventArgs e)
+        {
+            InicializarRest();
+            RefrescarGrid();
         }
     }
 }

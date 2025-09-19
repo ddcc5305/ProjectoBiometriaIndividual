@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Prueba Mediciones</title>
+    <style>
+        table { border-collapse: collapse; width: 100%; margin-top: 10px; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background-color: #eee; }
+    </style>
+</head>
+<body>
+    <h1>Mediciones</h1>
+
+    <button onclick="cargarMediciones()">Recargar Mediciones</button>
+
+    <table id="tablaMediciones">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tipo</th>
+                <th>Valor</th>
+                <th>Contador</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <script>
+        const urlAPI = 'mediciones.php';
+
+        function cargarMediciones() {
+            fetch(urlAPI)
+                .then(res => res.json())
+                .then(data => {
+                    const tbody = document.querySelector("#tablaMediciones tbody");
+                    tbody.innerHTML = "";
+                    data.forEach(medida => {
+                        const tr = document.createElement("tr");
+                        tr.innerHTML = `
+                            <td>${medida.Id}</td>
+                            <td>${medida.Tipo}</td>
+                            <td>${medida.Valor}</td>
+                            <td>${medida.Contador}</td>
+                            <td>${medida.Timestamp}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                });
+        }
+
+        // Cargar automáticamente al abrir la página
+        window.onload = cargarMediciones;
+    </script>
+</body>
+</html>
