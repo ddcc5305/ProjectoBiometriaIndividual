@@ -71,6 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Mediciones.aspx" />
+    <Content Include="MedidasService.asmx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -83,7 +84,12 @@
       <DependentUpon>Mediciones.aspx</DependentUpon>
     </Compile>
     <Compile Include="Medida.cs" />
+    <Compile Include="MedidasService.asmx.cs">
+      <SubType>Component</SubType>
+      <DependentUpon>MedidasService.asmx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RestServidor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
