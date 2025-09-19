@@ -3,6 +3,7 @@ package com.example.beaconconnect;
 // ------------------------------------------------------------------
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.le.BluetoothLeScanner;
@@ -21,8 +22,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -42,6 +46,14 @@ public class MainActivity extends AppCompatActivity {
     private BluetoothLeScanner elEscanner;
 
     private ScanCallback callbackDelEscaneo = null;
+
+    //Peticion REST
+    private RestClient restClient;
+    String url = "https://dbayluj.upv.edu.es/mediciones.php";
+
+    // Acumular mediciones
+    private AcumuladorMediciones acumulador;
+    private int numLecturas = 10;
 
     // --------------------------------------------------------------
     // --------------------------------------------------------------
@@ -129,21 +141,21 @@ public class MainActivity extends AppCompatActivity {
             Map<String, Integer> medicion = FiltroMedicionesIBeacon.procesarTrama(tib);
 
             if (medicion.containsKey("co2")) {
+<<<<<<< Updated upstream
                 int co2 = medicion.get("co2");
                 Log.d(ETIQUETA_LOG, "Medición CO2 = " + co2);
                 // Mostrar en pantalla o enviar a DB
+=======
+                acumulador.agregarMedicion("co2", medicion.get("co2"), medicion.get("contador"));
+>>>>>>> Stashed changes
             }
 
             if (medicion.containsKey("temperatura")) {
-                int temp = medicion.get("temperatura");
-                Log.d(ETIQUETA_LOG, "Medición Temperatura = " + temp);
-                // Mostrar en pantalla o enviar a DB
+                acumulador.agregarMedicion("temperatura", medicion.get("temperatura"), medicion.get("contador"));
             }
 
             if (medicion.containsKey("ruido")) {
-                int ruido = medicion.get("ruido");
-                Log.d(ETIQUETA_LOG, "Medición ruido = " + ruido);
-                // Mostrar en pantalla o enviar a DB
+                acumulador.agregarMedicion("ruido", medicion.get("ruido"), medicion.get("contador"));
             }
 
             Log.d(ETIQUETA_LOG, " ****************************************************");
@@ -222,6 +234,16 @@ public class MainActivity extends AppCompatActivity {
     // --------------------------------------------------------------
     // --------------------------------------------------------------
     private void detenerBusquedaDispositivosBTLE() {
+
+        /* Ejemplo de POST
+        String url = "https://dbayluj.upv.edu.es/mediciones.php";
+        String cuerpoJson = "{ \"Tipo\": \"co2\", \"Valor\": 250, \"Contador\": 8, \"Timestamp\": \"2035-09-19\" }";
+
+        RestClient.hacerPeticion("POST", url, cuerpoJson, (codigo, cuerpo) -> {
+            Log.d("POST Medida", "Código: " + codigo + ", Respuesta: " + cuerpo);
+        });
+
+         */
 
         if ( this.callbackDelEscaneo == null ) {
             return;
@@ -318,6 +340,8 @@ public class MainActivity extends AppCompatActivity {
 
         checkBluetoothPermissions();
         inicializarBlueTooth();
+
+        acumulador = new AcumuladorMediciones(numLecturas, url);
 
         Log.d(ETIQUETA_LOG, " onCreate(): termina ");
 
