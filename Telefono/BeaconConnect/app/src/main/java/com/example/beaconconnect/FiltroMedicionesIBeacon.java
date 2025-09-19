@@ -30,22 +30,34 @@ public class FiltroMedicionesIBeacon {
         int majorInt = Utilidades.bytesToInt(tib.getMajor());
         int minorInt = Utilidades.bytesToInt(tib.getMinor());
 
-        int tipoMedicion = (majorInt >> 8) & 0xFF;
-        int contador = majorInt & 0xFF;
+        int tipoMedicion;
+        int contador;
+
+        if (majorInt > 0xFF) {
+            tipoMedicion = (majorInt >> 8) & 0xFF;
+            contador = majorInt & 0xFF;
+        } else {
+            tipoMedicion = majorInt;
+            contador = 0;
+        }
+
 
         resultado.put("contador", contador);
 
         switch (tipoMedicion) {
             case TIPO_CO2:
                 resultado.put("co2", minorInt);
+                Log.w(ETIQUETA_LOG, "Medicion de co2: " + minorInt);
                 break;
 
             case TIPO_TEMPERATURA:
                 resultado.put("temperatura", minorInt);
+                Log.w(ETIQUETA_LOG, "Medicion de temperatura: " + minorInt);
                 break;
 
             case TIPO_RUIDO:
                 resultado.put("ruido", minorInt);
+                Log.w(ETIQUETA_LOG, "Medicion de ruido: " + minorInt);
                 break;
 
             default:
