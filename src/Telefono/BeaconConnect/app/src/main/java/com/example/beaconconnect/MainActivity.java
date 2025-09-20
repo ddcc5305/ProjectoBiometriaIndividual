@@ -141,15 +141,7 @@ public class MainActivity extends AppCompatActivity {
             Map<String, Integer> medicion = FiltroMedicionesIBeacon.procesarTrama(tib);
 
             if (medicion.containsKey("co2")) {
-<<<<<<< Updated upstream
-                int co2 = medicion.get("co2");
-                int contador = medicion.get("contador");
-                Log.d(ETIQUETA_LOG, "Medición CO2 = " + co2);
-                Log.d(ETIQUETA_LOG, "Contador = " + contador);
-                // Mostrar en pantalla o enviar a DB
-=======
                 acumulador.agregarMedicion("co2", medicion.get("co2"), medicion.get("contador"));
->>>>>>> Stashed changes
             }
 
             if (medicion.containsKey("temperatura")) {
