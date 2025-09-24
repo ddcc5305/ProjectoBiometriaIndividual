@@ -8,7 +8,7 @@ import java.util.Map;
 // @author: David Bayona Lujan
 // Clase utilizada para filtrar el mayor y el menor por su id de sensor y sus datos
 // -----------------------------------------------------------------------------------
-public class FiltroMedicionesIBeacon {
+public class LogicaDeFiltrarMedicionesIBeacon {
 
     private static final String ETIQUETA_LOG = ">>>>";
 
@@ -18,6 +18,7 @@ public class FiltroMedicionesIBeacon {
 
     // Método que procesa la trama para obtener el mayor y el menor filtrarlo y devolver tipo de medición junto a su dato
     // TramaIBeacon tib : bytes --> procesarTrama () --> resultado : String, N
+    //
     public static Map<String, Integer> procesarTrama(TramaIBeacon tib) {
 
         Map<String, Integer> resultado = new HashMap<>();

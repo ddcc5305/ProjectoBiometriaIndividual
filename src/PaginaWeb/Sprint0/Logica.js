@@ -30,25 +30,31 @@ class Logica {
     fs.appendFileSync(path.join(__dirname, "error.log"), logLine, { encoding: "utf8" });
   }
 
-  guardarMedicion(tipo, valor, contador, timestamp) {
-  return new Promise((resolve, reject) => {
-    if (!tipo || isNaN(valor) || !timestamp) {
-      return reject(new Error("Datos inválidos"));
-    }
-    this.db.run(
-      "INSERT INTO Mediciones (Tipo, Valor, Contador, Timestamp) VALUES (?,?,?,?)",
-      [tipo, valor, contador, timestamp],
-      function (err) {
-        if (err) {
-          console.error("Error SQLite:", err.message, err);
-          reject(err);
-        } else {
-          resolve(this.lastID);
-        }
+  guardarMedicion(json) {
+    return new Promise((resolve, reject) => {
+      const tipo = json.tipo || json.Tipo;
+      const valor = Number(json.valor || json.Valor);
+      const contador = parseInt(json.contador || json.Contador) || 0;
+      const timestamp = json.timestamp || json.Timestamp;
+
+      // Validación
+      if (!tipo || isNaN(valor) || !timestamp) {
+        return reject(new Error("Datos inválidos"));
       }
-    );
-  });
-}
+
+      this.db.run(
+        "INSERT INTO Mediciones (Tipo, Valor, Contador, Timestamp) VALUES (?,?,?,?)",
+        [tipo, valor, contador, timestamp],
+        function (err) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(this.lastID);
+          }
+        }
+      );
+    });
+  }
 
   obtenerUltimaMedicion() {
     return new Promise((resolve, reject) => {

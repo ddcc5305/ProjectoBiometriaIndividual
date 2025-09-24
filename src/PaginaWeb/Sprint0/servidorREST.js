@@ -20,22 +20,12 @@ function logError(err) {
 
 // POST: guardar medición
 app.post("/api/mediciones", async (req, res) => {
-    try {
-        const tipo = req.body.tipo || req.body.Tipo;
-        const valor = Number(req.body.valor || req.body.Valor);
-        const contador = parseInt(req.body.contador || req.body.Contador) || 0;
-        const timestamp = req.body.timestamp || req.body.Timestamp;
-
-        if (!tipo || isNaN(valor) || !timestamp) {
-            return res.status(400).json({ error: "Datos inválidos", body: req.body });
-        }
-
-        const id = await logica.guardarMedicion(tipo, valor, contador, timestamp);
-        res.json({ ok: true, id });
-    } catch (err) {
-        logError(err);
-        res.status(500).json({ error: "Error guardando medición", detalles: err.message });
-    }
+  try {
+    const id = await logica.guardarMedicion(req.body);
+    res.json({ ok: true, id });
+  } catch (err) {
+    res.status(400).json({ error: err.message, body: req.body });
+  }
 });
 
 // GET: obtener la última medición

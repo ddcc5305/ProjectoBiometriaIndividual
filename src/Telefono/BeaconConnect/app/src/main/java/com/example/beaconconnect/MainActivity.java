@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
     //Peticion REST
     private RestClient restClient;
-    String url = "https://dbayluj.upv.edu.es/mediciones.php";
+    String url = "https://dbayluj.upv.edu.es/api/mediciones";
 
     // Acumular mediciones
     private AcumuladorMediciones acumulador;
@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
             Log.d(ETIQUETA_LOG, " txPower  = " + Integer.toHexString(tib.getTxPower()) + " ( " + tib.getTxPower() + " )");
 
             // Procesamos la trama para obtener mediciones filtradas
-            Map<String, Integer> medicion = FiltroMedicionesIBeacon.procesarTrama(tib);
+            Map<String, Integer> medicion = LogicaDeFiltrarMedicionesIBeacon.procesarTrama(tib);
 
             if (medicion.containsKey("co2")) {
                 acumulador.agregarMedicion("co2", medicion.get("co2"), medicion.get("contador"));
