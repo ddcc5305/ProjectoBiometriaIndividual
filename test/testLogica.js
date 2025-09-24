@@ -12,13 +12,8 @@ async function testUltimaMedicion() {
   };
 
   try {
-    // Insertar la medición
-    const id = await logica.guardarMedicion(
-      esperado.Tipo,
-      esperado.Valor,
-      esperado.Contador,
-      esperado.Timestamp
-    );
+    // Insertar la medición (se pasa el JSON entero)
+    const id = await logica.guardarMedicion(esperado);
     console.log(`✅ Medición insertada con ID: ${id}`);
 
     // Obtener la última medición
