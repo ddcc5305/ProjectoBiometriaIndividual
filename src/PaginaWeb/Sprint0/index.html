@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Última medición</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background-color: #f5f5f5; }
+    h1 { color: #333; }
+    button { background-color: #4CAF50; color: white; border: none; padding: 8px 16px; cursor: pointer; margin-top: 10px; border-radius: 4px; }
+    button:hover { background-color: #45a049; }
+    .medicion { background-color: white; padding: 15px; border-radius: 6px; box-shadow: 0px 0px 5px rgba(0,0,0,0.1); margin-top: 10px; max-width: 400px; }
+    .medicion div { margin-bottom: 8px; }
+    .label { font-weight: bold; color: #555; }
+  </style>
+</head>
+<body>
+  <h1>Última medición</h1>
+  <button onclick="cargarUltima()">Ver última</button>
+
+  <div id="salida" class="medicion">
+    <div><span class="label">Tipo:</span> --</div>
+    <div><span class="label">Valor:</span> --</div>
+    <div><span class="label">Contador:</span> --</div>
+    <div><span class="label">Timestamp:</span> --</div>
+  </div>
+
+  <script>
+    async function cargarUltima() {
+      try {
+        const res = await fetch("/api/mediciones/ultima");
+        if (!res.ok) throw new Error("Error cargando medición");
+        const data = await res.json();
+        document.getElementById("salida").innerHTML = `
+          <div><span class="label">Tipo:</span> ${data.Tipo || "--"}</div>
+          <div><span class="label">Valor:</span> ${data.Valor || "--"}</div>
+          <div><span class="label">Contador:</span> ${data.Contador || "--"}</div>
+          <div><span class="label">Timestamp:</span> ${data.Timestamp || "--"}</div>
+        `;
+      } catch (err) {
+        alert(err.message);
+      }
+    }
+  </script>
+</body>
+</html>
