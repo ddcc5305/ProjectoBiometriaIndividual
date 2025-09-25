@@ -118,6 +118,11 @@ public:
 	//
 	//
 	(*this).detenerAnuncio();
+
+	//Añadir para que funcione
+	Bluefruit.Advertising.stop();
+	Bluefruit.Advertising.clearData();
+	Bluefruit.ScanResponse.clearData();
 	
 	//
 	// creo el beacon 

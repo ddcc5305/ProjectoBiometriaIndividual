@@ -10,6 +10,7 @@ import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
+import android.bluetooth.le.ScanSettings;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -53,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Acumular mediciones
     private AcumuladorMediciones acumulador;
-    private int numLecturas = 10;
+    private int numLecturas = 5;
 
     // --------------------------------------------------------------
     // --------------------------------------------------------------
@@ -101,6 +102,18 @@ public class MainActivity extends AppCompatActivity {
         BluetoothDevice bluetoothDevice = resultado.getDevice();
         byte[] bytes = resultado.getScanRecord().getBytes();
         int rssi = resultado.getRssi();
+        String nombre = "";
+
+        try {
+            nombre =  bluetoothDevice.getName();
+        } catch (SecurityException e) {
+            Log.e(ETIQUETA_LOG, "No tienes permisos suficientes para inicializar Bluetooth", e);
+        }
+
+        if (nombre == null || !nombre.equals("David")) {
+            Log.d(ETIQUETA_LOG, "No es David");
+            return;
+        }
 
         Log.d(ETIQUETA_LOG, " ****************************************************");
         Log.d(ETIQUETA_LOG, " ****** DISPOSITIVO DETECTADO BTLE ****************** ");
@@ -111,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (SecurityException e) {
             Log.e(ETIQUETA_LOG, "No tienes permisos suficientes para inicializar Bluetooth", e);
         }
+
         Log.d(ETIQUETA_LOG, " toString = " + bluetoothDevice.toString());
         Log.d(ETIQUETA_LOG, " dirección = " + bluetoothDevice.getAddress());
         Log.d(ETIQUETA_LOG, " rssi = " + rssi);
@@ -217,7 +231,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             this.elEscanner.startScan(
                     filtros,
-                    new android.bluetooth.le.ScanSettings.Builder().build(),
+                    new ScanSettings.Builder().build(),
                     this.callbackDelEscaneo
             );
         } catch (SecurityException e) {

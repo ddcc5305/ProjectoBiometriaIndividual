@@ -18,6 +18,8 @@ public class AcumuladorMediciones {
     private List<Integer> co2List = new ArrayList<>();
     private List<Integer> tempList = new ArrayList<>();
     private List<Integer> ruidoList = new ArrayList<>();
+
+    // este es el acumulador interno para decidir cada cuántas lecturas enviar
     private int contadorAcumulado = 0;
 
     public AcumuladorMediciones(int maxLecturas, String url) {
@@ -25,36 +27,40 @@ public class AcumuladorMediciones {
         this.url = url;
     }
 
-    public void agregarMedicion(String tipo, int valor, int contador) {
-        contadorAcumulado++;
+    public void agregarMedicion(String tipo, int valor, int contadorExterno) {
+        contadorAcumulado++;  // se incrementa con cada lectura recibida
 
         switch (tipo) {
             case "co2": co2List.add(valor); break;
             case "temperatura": tempList.add(valor); break;
             case "ruido": ruidoList.add(valor); break;
-            default: Log.w(ETIQUETA_LOG, "Tipo desconocido: " + tipo); return;
+            default:
+                Log.w(ETIQUETA_LOG, "Tipo desconocido: " + tipo);
+                return;
         }
 
+        // usamos el acumulado para decidir cuándo enviar
         if (contadorAcumulado >= maxLecturas) {
-            enviarPromedios();
+            enviarPromedios(contadorExterno); // pero enviamos el contador externo
             limpiarListas();
         }
     }
 
-    private void enviarPromedios() {
-        String timestamp = new SimpleDateFormat("dd/MM/yyyy", new Locale("es", "ES")).format(new Date());
+    private void enviarPromedios(int contadorExterno) {
+        String timestamp = new SimpleDateFormat("dd/MM/yyyy", new Locale("es", "ES"))
+                .format(new Date());
 
         if (!co2List.isEmpty()) {
             int promedio = (int) co2List.stream().mapToInt(Integer::intValue).average().orElse(0);
-            enviarRest("co2", promedio, contadorAcumulado, timestamp);
+            enviarRest("co2", promedio, contadorExterno, timestamp);
         }
         if (!tempList.isEmpty()) {
             int promedio = (int) tempList.stream().mapToInt(Integer::intValue).average().orElse(0);
-            enviarRest("temperatura", promedio, contadorAcumulado, timestamp);
+            enviarRest("temperatura", promedio, contadorExterno, timestamp);
         }
         if (!ruidoList.isEmpty()) {
             int promedio = (int) ruidoList.stream().mapToInt(Integer::intValue).average().orElse(0);
-            enviarRest("ruido", promedio, contadorAcumulado, timestamp);
+            enviarRest("ruido", promedio, contadorExterno, timestamp);
         }
     }
 
@@ -72,6 +78,6 @@ public class AcumuladorMediciones {
         co2List.clear();
         tempList.clear();
         ruidoList.clear();
-        contadorAcumulado = 0;
+        contadorAcumulado = 0; // se reinicia solo el acumulado interno
     }
 }

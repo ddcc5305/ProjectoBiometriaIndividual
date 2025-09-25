@@ -84,12 +84,12 @@ public:
 	//
 	// 2. esperamos el tiempo que nos digan
 	//
-	esperar( tiempoEspera );
+	//esperar( tiempoEspera );
 
 	//
 	// 3. paramos anuncio
 	//
-	(*this).laEmisora.detenerAnuncio();
+	//(*this).laEmisora.detenerAnuncio();
   } // ()
 
   // ............................................................
