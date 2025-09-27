@@ -42,6 +42,7 @@ public class LogicaDeFiltrarMedicionesIBeacon {
             contador = 0;
         }
 
+        Log.w(ETIQUETA_LOG, "contador: " + contador);
         resultado.put("contador", contador);
 
         switch (tipoMedicion) {

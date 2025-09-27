@@ -28,7 +28,12 @@ public:
   // .....................................................
   // .....................................................
   int medirCO2() {
-	return 235;
+	static int mediciones[5] = {230, 240, 235, 245, 225};
+    static int indice = 0;
+
+    int valor = mediciones[indice];
+    indice = (indice + 1) % 5; // pasamos al siguiente valor en ciclo
+    return valor;
   } // ()
 
   // .....................................................

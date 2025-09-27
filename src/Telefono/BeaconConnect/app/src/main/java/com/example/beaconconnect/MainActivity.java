@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onScanResult( int callbackType, ScanResult resultado ) {
                 super.onScanResult(callbackType, resultado);
-                Log.d(ETIQUETA_LOG, " buscarTodosLosDispositivosBTL(): onScanResult() ");
+                //Log.d(ETIQUETA_LOG, " buscarTodosLosDispositivosBTL(): onScanResult() ");
 
                 mostrarInformacionDispositivoBTLE( resultado );
             }
@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (nombre == null || !nombre.equals("David")) {
-            Log.d(ETIQUETA_LOG, "No es David");
+            //Log.d(ETIQUETA_LOG, "No es David");
             return;
         }
 

@@ -58,39 +58,24 @@ public:
 
   // ............................................................
   // ............................................................
-  void publicarCO2( int16_t valorCO2, uint8_t contador,
-					long tiempoEspera ) {
+  void publicarCO2(int16_t valorCO2, uint8_t contador, long tiempoEspera) {
+    uint16_t major = (MedicionesID::CO2 << 8) + contador;
 
-	//
-	// 1. empezamos anuncio
-	//
-	uint16_t major = (MedicionesID::CO2 << 8) + contador;
-	(*this).laEmisora.emitirAnuncioIBeacon( (*this).beaconUUID, 
-											major,
-											valorCO2, // minor
-											(*this).RSSI // rssi
-									);
+    // Empezamos anuncio
+    (*this).laEmisora.emitirAnuncioIBeacon((*this).beaconUUID, major, valorCO2, (*this).RSSI);
 
-	/*
-	Globales::elPuerto.escribir( "   publicarCO2(): valor=" );
-	Globales::elPuerto.escribir( valorCO2 );
-	Globales::elPuerto.escribir( "   contador=" );
-	Globales::elPuerto.escribir( contador );
-	Globales::elPuerto.escribir( "   todo="  );
-	Globales::elPuerto.escribir( major );
-	Globales::elPuerto.escribir( "\n" );
-	*/
+    // Esperamos al menos un intervalo de publicidad para que se transmita
+    // Bluefruit.Advertising.setInterval(100) -> 100*0.625ms = 62.5ms
+    // para estar seguros, podemos esperar 200 ms por paquete
+    esperar(200);
 
-	//
-	// 2. esperamos el tiempo que nos digan
-	//
-	//esperar( tiempoEspera );
+    // Si quieres mantener la medición visible durante un tiempo, espera el tiempo indicado
+    esperar(tiempoEspera);
 
-	//
-	// 3. paramos anuncio
-	//
-	//(*this).laEmisora.detenerAnuncio();
-  } // ()
+    // Finalmente, detenemos el anuncio
+    (*this).laEmisora.detenerAnuncio();
+}
+
 
   // ............................................................
   // ............................................................
