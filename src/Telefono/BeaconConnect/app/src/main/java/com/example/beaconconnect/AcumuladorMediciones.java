@@ -18,6 +18,8 @@ public class AcumuladorMediciones {
 
     private final Map<String, List<Integer>> mediciones = new HashMap<>();
 
+    private final Map<String, Integer> ultimoContador = new HashMap<>();
+
     // Guarda el maxLecturas antes de calcular el promedio y enviar y la url del destino
     // N : maxLecturas & String : url -> AcumuladorMediciones() -> N : maxLecturas & String : url (campos privados de la clase)
     //
@@ -30,8 +32,19 @@ public class AcumuladorMediciones {
     // String : tipo & R : Valor & N : contadorExterno -> agregarMedicion()
     //
     public void agregarMedicion(String tipo, int valor, int contadorExterno) {
+        int ultimo = ultimoContador.getOrDefault(tipo, -1);
+        if (contadorExterno <= ultimo) {
+            Log.d(ETIQUETA_LOG, "Se ignora medición antigua o repetida (" + tipo + ") con contador " + contadorExterno);
+            return; // no agregar ni acumular
+        }
+
+        ultimoContador.put(tipo, contadorExterno);
+
         mediciones.computeIfAbsent(tipo, k -> new ArrayList<>()).add(valor);
-        Log.d(ETIQUETA_LOG, "Medicion individual: " + valor + "Contador: " + contadorExterno);
+
+        Log.d(ETIQUETA_LOG, "Medicion individual (" + tipo + "): " + valor
+                + " | Contador: " + contadorExterno
+                + " | Total acumuladas: " + mediciones.get(tipo).size());
 
         if (mediciones.get(tipo).size() >= maxLecturas) {
             enviarPromedio(tipo, contadorExterno);
@@ -52,7 +65,9 @@ public class AcumuladorMediciones {
 
         enviarRest(tipo, promedio, contadorExterno, timestamp);
 
-        Log.d(ETIQUETA_LOG, "Promedio " + tipo + ": " + promedio + " | Contador externo: " + contadorExterno);
+        Log.d(ETIQUETA_LOG, ">>>> Se alcanzaron " + maxLecturas
+                + " lecturas de " + tipo
+                + ". Promedio enviado = " + promedio);
     }
 
     // Prepara la petición rest y llama a su respectiva clase
@@ -63,6 +78,7 @@ public class AcumuladorMediciones {
                 "{ \"Tipo\": \"%s\", \"Valor\": %d, \"Contador\": %d, \"Timestamp\": \"%s\" }",
                 tipo, valor, contador, timestamp);
 
+        Log.d(ETIQUETA_LOG, "EnviamosREST de: " + cuerpoJson);
         RestClient.hacerPeticion("POST", url, cuerpoJson, (codigo, cuerpo) -> {
             Log.d("POST Medida", "Código: " + codigo + ", Respuesta: " + cuerpo);
         });

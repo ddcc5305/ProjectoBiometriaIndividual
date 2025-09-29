@@ -140,17 +140,18 @@ void loop () {
   
   elPublicador.publicarCO2( valorCO2,
 							cont,
-							1000 // intervalo de emisión
+							2000 // intervalo de emisión
 							);
   
   // 
   // mido y publico
   // 
+  esperar(500);
   int valorTemperatura = elMedidor.medirTemperatura();
   
   elPublicador.publicarTemperatura( valorTemperatura, 
 									cont,
-									1000 // intervalo de emisión
+									2000 // intervalo de emisión
 									);
 
   // 

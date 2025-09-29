@@ -39,7 +39,12 @@ public:
   // .....................................................
   // .....................................................
   int medirTemperatura() {
-	return -12; // qué frío !
+	static int mediciones[5] = {-17, 32, 23, 42, -12};
+    static int indice = 0;
+
+    int valor = mediciones[indice];
+    indice = (indice + 1) % 5; // pasamos al siguiente valor en ciclo
+    return valor;
   } // ()
 	
 }; // class

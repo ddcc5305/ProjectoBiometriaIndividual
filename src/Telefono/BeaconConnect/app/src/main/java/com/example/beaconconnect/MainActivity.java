@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Acumular mediciones
     private AcumuladorMediciones acumulador;
-    private int numLecturas = 5;
+    private int numLecturas = 10;
 
     // --------------------------------------------------------------
     // --------------------------------------------------------------

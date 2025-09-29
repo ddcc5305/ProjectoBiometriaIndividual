@@ -71,7 +71,7 @@ public:
 	  Globales::elPuerto.escribir( "   todo="  );
 	  Globales::elPuerto.escribir( major );
 	  Globales::elPuerto.escribir( "\n" );
-    esperar(200);
+    esperar(500);
 
     // Si quieres mantener la medición visible durante un tiempo, espera el tiempo indicado
     esperar(tiempoEspera);
@@ -92,8 +92,16 @@ public:
 											valorTemperatura, // minor
 											(*this).RSSI // rssi
 									);
-                  
-  esperar(200);
+
+  Globales::elPuerto.escribir( "   publicarTemperatura(): valor=" );
+	Globales::elPuerto.escribir( valorTemperatura );
+	Globales::elPuerto.escribir( "   contador=" );
+	Globales::elPuerto.escribir( contador );
+	Globales::elPuerto.escribir( "   todo="  );
+	Globales::elPuerto.escribir( major );
+	Globales::elPuerto.escribir( "\n" );                
+  esperar(500);
+
 	esperar( tiempoEspera );
 
 	(*this).laEmisora.detenerAnuncio();
