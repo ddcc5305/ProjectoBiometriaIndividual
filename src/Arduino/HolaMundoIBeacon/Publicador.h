@@ -64,9 +64,13 @@ public:
     // Empezamos anuncio
     (*this).laEmisora.emitirAnuncioIBeacon((*this).beaconUUID, major, valorCO2, (*this).RSSI);
 
-    // Esperamos al menos un intervalo de publicidad para que se transmita
-    // Bluefruit.Advertising.setInterval(100) -> 100*0.625ms = 62.5ms
-    // para estar seguros, podemos esperar 200 ms por paquete
+    Globales::elPuerto.escribir( "   publicarCO2(): valor=" );
+	  Globales::elPuerto.escribir( valorCO2 );
+	  Globales::elPuerto.escribir( "   contador=" );
+	  Globales::elPuerto.escribir( contador );
+	  Globales::elPuerto.escribir( "   todo="  );
+	  Globales::elPuerto.escribir( major );
+	  Globales::elPuerto.escribir( "\n" );
     esperar(200);
 
     // Si quieres mantener la medición visible durante un tiempo, espera el tiempo indicado
@@ -88,6 +92,8 @@ public:
 											valorTemperatura, // minor
 											(*this).RSSI // rssi
 									);
+                  
+  esperar(200);
 	esperar( tiempoEspera );
 
 	(*this).laEmisora.detenerAnuncio();
