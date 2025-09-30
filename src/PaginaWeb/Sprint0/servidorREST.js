@@ -10,15 +10,14 @@ const logica = new Logica(rutaBD);
 
 const app = express();
 app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, "."))); // sirve index.html y favicon
+app.use(express.static(path.join(__dirname, ".")));
 
-// Función auxiliar para guardar logs
 function logError(err) {
     const logLine = `${new Date().toISOString()} - ${err.stack || err.message}\n`;
     fs.appendFileSync(path.join(__dirname, 'error.log'), logLine, { encoding: 'utf8' });
 }
 
-// POST: guardar medición
+// POST: guardar medicion
 app.post("/api/mediciones", async (req, res) => {
   try {
     const id = await logica.guardarMedicion(req.body);
@@ -28,7 +27,7 @@ app.post("/api/mediciones", async (req, res) => {
   }
 });
 
-// GET: obtener la última medición
+// GET: obtener la ultima medicion
 app.get("/api/mediciones/ultima", async (req, res) => {
     try {
         const ultima = await logica.obtenerUltimaMedicion();
@@ -39,7 +38,6 @@ app.get("/api/mediciones/ultima", async (req, res) => {
     }
 });
 
-// Servir index.html
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "index.html"));
 });

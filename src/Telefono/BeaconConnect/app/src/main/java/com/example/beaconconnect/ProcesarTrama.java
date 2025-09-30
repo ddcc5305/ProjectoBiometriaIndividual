@@ -8,7 +8,7 @@ import java.util.Map;
 // @author: David Bayona Lujan
 // Clase utilizada para filtrar el mayor y el menor por su id de sensor y sus datos
 // -----------------------------------------------------------------------------------
-public class LogicaDeFiltrarMedicionesIBeacon {
+public class ProcesarTrama {
 
     private static final String ETIQUETA_LOG = ">>>>";
 

@@ -71,7 +71,6 @@ public:
 	  Globales::elPuerto.escribir( "   todo="  );
 	  Globales::elPuerto.escribir( major );
 	  Globales::elPuerto.escribir( "\n" );
-    esperar(500);
 
     // Si quieres mantener la medición visible durante un tiempo, espera el tiempo indicado
     esperar(tiempoEspera);
@@ -100,7 +99,6 @@ public:
 	Globales::elPuerto.escribir( "   todo="  );
 	Globales::elPuerto.escribir( major );
 	Globales::elPuerto.escribir( "\n" );                
-  esperar(500);
 
 	esperar( tiempoEspera );
 

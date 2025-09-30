@@ -3,20 +3,16 @@ const Logica = require("./Logica.js");
 async function testUltimaMedicion() {
   const logica = new Logica("mediciones.db");
 
-  // Datos que vamos a insertar y luego comprobar
   const esperado = {
     Tipo: "co2",
-    Valor: 230,
-    Contador: 8,
-    Timestamp: new Date().toISOString()
+    Valor: 233,
+    Contador: 5
   };
 
   try {
-    // Insertar la medición (se pasa el JSON entero)
     const id = await logica.guardarMedicion(esperado);
     console.log(`✅ Medición insertada con ID: ${id}`);
 
-    // Obtener la última medición
     const ultima = await logica.obtenerUltimaMedicion();
 
     if (!ultima) {
@@ -41,6 +37,8 @@ async function testUltimaMedicion() {
       correcto = false;
     }
 
+    console.log("Timestamp guardado en DB:", ultima.Timestamp);
+
     if (correcto) {
       console.log("✅ Test OK: la última medición coincide con los datos esperados");
     } else {
@@ -52,5 +50,4 @@ async function testUltimaMedicion() {
   }
 }
 
-// Ejecutar test
 testUltimaMedicion();

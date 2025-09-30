@@ -152,18 +152,18 @@ public class MainActivity extends AppCompatActivity {
             Log.d(ETIQUETA_LOG, " txPower  = " + Integer.toHexString(tib.getTxPower()) + " ( " + tib.getTxPower() + " )");
 
             // Procesamos la trama para obtener mediciones filtradas
-            Map<String, Integer> medicion = LogicaDeFiltrarMedicionesIBeacon.procesarTrama(tib);
+            Map<String, Integer> medicion = ProcesarTrama.procesarTrama(tib);
 
             if (medicion.containsKey("co2")) {
-                acumulador.agregarMedicion("co2", medicion.get("co2"), medicion.get("contador"));
+                acumulador.acumularMedicion("co2", medicion.get("co2"), medicion.get("contador"));
             }
 
             if (medicion.containsKey("temperatura")) {
-                acumulador.agregarMedicion("temperatura", medicion.get("temperatura"), medicion.get("contador"));
+                acumulador.acumularMedicion("temperatura", medicion.get("temperatura"), medicion.get("contador"));
             }
 
             if (medicion.containsKey("ruido")) {
-                acumulador.agregarMedicion("ruido", medicion.get("ruido"), medicion.get("contador"));
+                acumulador.acumularMedicion("ruido", medicion.get("ruido"), medicion.get("contador"));
             }
 
             Log.d(ETIQUETA_LOG, " ****************************************************");

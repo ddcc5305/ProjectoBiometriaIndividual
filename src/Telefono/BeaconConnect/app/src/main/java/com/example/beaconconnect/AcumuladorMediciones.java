@@ -28,14 +28,14 @@ public class AcumuladorMediciones {
         this.url = url;
     }
 
-    // Agrega una medición con su sensor y el contador
-    // String : tipo & R : Valor & N : contadorExterno -> agregarMedicion()
+    // Acumula una medición con su sensor y el contador
+    // String : tipo & R : Valor & N : contadorExterno -> acumularMedicion()
     //
-    public void agregarMedicion(String tipo, int valor, int contadorExterno) {
+    public void acumularMedicion(String tipo, int valor, int contadorExterno) {
         int ultimo = ultimoContador.getOrDefault(tipo, -1);
         if (contadorExterno <= ultimo) {
             Log.d(ETIQUETA_LOG, "Se ignora medición antigua o repetida (" + tipo + ") con contador " + contadorExterno);
-            return; // no agregar ni acumular
+            return;
         }
 
         ultimoContador.put(tipo, contadorExterno);
@@ -63,24 +63,10 @@ public class AcumuladorMediciones {
         String timestamp = new SimpleDateFormat("dd/MM/yyyy", new Locale("es", "ES"))
                 .format(new Date());
 
-        enviarRest(tipo, promedio, contadorExterno, timestamp);
+        LogicaFake.agregarMedicion(tipo, promedio, contadorExterno, timestamp);
 
         Log.d(ETIQUETA_LOG, ">>>> Se alcanzaron " + maxLecturas
                 + " lecturas de " + tipo
                 + ". Promedio enviado = " + promedio);
-    }
-
-    // Prepara la petición rest y llama a su respectiva clase
-    // String : tipo & R : Valor & N : contador & String : timestamp -> enviarRest()
-    //
-    private void enviarRest(String tipo, int valor, int contador, String timestamp) {
-        String cuerpoJson = String.format(new Locale("es", "ES"),
-                "{ \"Tipo\": \"%s\", \"Valor\": %d, \"Contador\": %d, \"Timestamp\": \"%s\" }",
-                tipo, valor, contador, timestamp);
-
-        Log.d(ETIQUETA_LOG, "EnviamosREST de: " + cuerpoJson);
-        RestClient.hacerPeticion("POST", url, cuerpoJson, (codigo, cuerpo) -> {
-            Log.d("POST Medida", "Código: " + codigo + ", Respuesta: " + cuerpo);
-        });
     }
 }

@@ -4,7 +4,6 @@ const path = require("path");
 
 class Logica {
   constructor(nombreBD) {
-    // Usamos ruta absoluta
     const rutaBD = path.resolve(nombreBD);
     this.db = new sqlite3.Database(rutaBD, (err) => {
       if (err) {
@@ -24,7 +23,6 @@ class Logica {
     });
   }
 
-  // Función para registrar errores
   logError(err) {
     const logLine = `${new Date().toISOString()} - ${err.stack || err.message}\n`;
     fs.appendFileSync(path.join(__dirname, "error.log"), logLine, { encoding: "utf8" });
@@ -35,9 +33,17 @@ class Logica {
       const tipo = json.tipo || json.Tipo;
       const valor = Number(json.valor || json.Valor);
       const contador = parseInt(json.contador || json.Contador) || 0;
-      const timestamp = json.timestamp || json.Timestamp;
+      
+      const fecha = new Date();
+      const timestamp = fecha.toLocaleString("es-ES", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit"
+      });
 
-      // Validación
       if (!tipo || isNaN(valor) || !timestamp) {
         return reject(new Error("Datos inválidos"));
       }
