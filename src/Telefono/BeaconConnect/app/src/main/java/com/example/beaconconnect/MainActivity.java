@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Acumular mediciones
     private AcumuladorMediciones acumulador;
-    private int numLecturas = 10;
+    private int numLecturas = 5;
 
     // --------------------------------------------------------------
     // --------------------------------------------------------------
@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
             Log.d(ETIQUETA_LOG, " txPower  = " + Integer.toHexString(tib.getTxPower()) + " ( " + tib.getTxPower() + " )");
 
             // Procesamos la trama para obtener mediciones filtradas
-            Map<String, Integer> medicion = ProcesarTrama.procesarTrama(tib);
+            Map<String, Double> medicion = ProcesarTrama.procesarTrama(tib);
 
             if (medicion.containsKey("co2")) {
                 acumulador.acumularMedicion("co2", medicion.get("co2"), medicion.get("contador"));

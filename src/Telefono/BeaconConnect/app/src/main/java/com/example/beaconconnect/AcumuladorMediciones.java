@@ -16,9 +16,9 @@ public class AcumuladorMediciones {
     private final int maxLecturas;
     private final String url;
 
-    private final Map<String, List<Integer>> mediciones = new HashMap<>();
+    private final Map<String, List<Double>> mediciones = new HashMap<>();
 
-    private final Map<String, Integer> ultimoContador = new HashMap<>();
+    private final Map<String, Double> ultimoContador = new HashMap<>();
 
     // Guarda el maxLecturas antes de calcular el promedio y enviar y la url del destino
     // N : maxLecturas & String : url -> AcumuladorMediciones() -> N : maxLecturas & String : url (campos privados de la clase)
@@ -31,8 +31,8 @@ public class AcumuladorMediciones {
     // Acumula una medición con su sensor y el contador
     // String : tipo & R : Valor & N : contadorExterno -> acumularMedicion()
     //
-    public void acumularMedicion(String tipo, int valor, int contadorExterno) {
-        int ultimo = ultimoContador.getOrDefault(tipo, -1);
+    public void acumularMedicion(String tipo, double valor, double contadorExterno) {
+        Double ultimo = ultimoContador.getOrDefault(tipo, Double.valueOf(-1));
         if (contadorExterno <= ultimo) {
             Log.d(ETIQUETA_LOG, "Se ignora medición antigua o repetida (" + tipo + ") con contador " + contadorExterno);
             return;
@@ -55,15 +55,13 @@ public class AcumuladorMediciones {
     // Calcula y envía el promedio de un tipo de medición con la fecha
     // string : tipo & N : contadorExterno -> enviarPromedio()
     //
-    private void enviarPromedio(String tipo, int contadorExterno) {
-        List<Integer> lista = mediciones.get(tipo);
+    private void enviarPromedio(String tipo, double contadorExterno) {
+        List<Double> lista = mediciones.get(tipo);
         if (lista == null || lista.isEmpty()) return;
 
-        int promedio = (int) lista.stream().mapToInt(Integer::intValue).average().orElse(0);
-        String timestamp = new SimpleDateFormat("dd/MM/yyyy", new Locale("es", "ES"))
-                .format(new Date());
+        double promedio = (double) lista.stream().mapToDouble(Double::doubleValue).average().orElse(0);
 
-        LogicaFake.agregarMedicion(tipo, promedio, contadorExterno, timestamp);
+        LogicaFake.agregarMedicion(tipo, promedio, contadorExterno, url);
 
         Log.d(ETIQUETA_LOG, ">>>> Se alcanzaron " + maxLecturas
                 + " lecturas de " + tipo

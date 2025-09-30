@@ -19,9 +19,9 @@ public class ProcesarTrama {
     // Método que procesa la trama para obtener el mayor y el menor filtrarlo y devolver tipo de medición junto a su dato
     // TramaIBeacon tib : bytes --> procesarTrama () --> resultado : String, N
     //
-    public static Map<String, Integer> procesarTrama(TramaIBeacon tib) {
+    public static Map<String, Double> procesarTrama(TramaIBeacon tib) {
 
-        Map<String, Integer> resultado = new HashMap<>();
+        Map<String, Double> resultado = new HashMap<>();
 
         if (tib.getMajor() == null || tib.getMinor() == null) {
             Log.e(ETIQUETA_LOG, "Trama inválida: major o minor nulo");
@@ -29,7 +29,7 @@ public class ProcesarTrama {
         }
 
         int majorInt = Utilidades.bytesToInt(tib.getMajor());
-        int minorInt = Utilidades.bytesToInt(tib.getMinor());
+        double minorInt = Utilidades.bytesToInt(tib.getMinor());
 
         int tipoMedicion;
         int contador;
@@ -43,7 +43,7 @@ public class ProcesarTrama {
         }
 
         Log.w(ETIQUETA_LOG, "contador: " + contador);
-        resultado.put("contador", contador);
+        resultado.put("contador", (double) contador);
 
         switch (tipoMedicion) {
             case TIPO_CO2:
