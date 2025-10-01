@@ -1,5 +1,4 @@
 const sqlite3 = require("sqlite3").verbose();
-const fs = require("fs");
 const path = require("path");
 
 class Logica {
@@ -7,7 +6,6 @@ class Logica {
     const rutaBD = path.resolve(nombreBD);
     this.db = new sqlite3.Database(rutaBD, (err) => {
       if (err) {
-        this.logError(err);
         console.error("Error abriendo la BD:", err.message);
       }
     });
@@ -19,13 +17,8 @@ class Logica {
       Contador INTEGER DEFAULT 0,
       Timestamp TEXT NOT NULL
     )`, (err) => {
-      if (err) this.logError(err);
+      if (err) console.error("Error creando tabla:", err.message);
     });
-  }
-
-  logError(err) {
-    const logLine = `${new Date().toISOString()} - ${err.stack || err.message}\n`;
-    fs.appendFileSync(path.join(__dirname, "error.log"), logLine, { encoding: "utf8" });
   }
 
   guardarMedicion(json) {
@@ -36,12 +29,12 @@ class Logica {
       
       const fecha = new Date();
       const timestamp = fecha.toLocaleString("es-ES", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit"
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
       });
 
       if (!tipo || isNaN(valor) || !timestamp) {

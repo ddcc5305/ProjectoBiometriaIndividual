@@ -1,7 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
-const fs = require("fs");
 const Logica = require("./Logica.js");
 
 // Ruta absoluta para la base de datos dentro de httpdocs
@@ -11,11 +10,6 @@ const logica = new Logica(rutaBD);
 const app = express();
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, ".")));
-
-function logError(err) {
-    const logLine = `${new Date().toISOString()} - ${err.stack || err.message}\n`;
-    fs.appendFileSync(path.join(__dirname, 'error.log'), logLine, { encoding: 'utf8' });
-}
 
 // POST: guardar medicion
 app.post("/api/mediciones", async (req, res) => {
@@ -29,20 +23,19 @@ app.post("/api/mediciones", async (req, res) => {
 
 // GET: obtener la ultima medicion
 app.get("/api/mediciones/ultima", async (req, res) => {
-    try {
-        const ultima = await logica.obtenerUltimaMedicion();
-        res.json(ultima || {});
-    } catch (err) {
-        logError(err);
-        res.status(500).json({ error: "Error obteniendo medición", detalles: err.message });
-    }
+  try {
+    const ultima = await logica.obtenerUltimaMedicion();
+    res.json(ultima || {});
+  } catch (err) {
+    res.status(500).json({ error: "Error obteniendo medición", detalles: err.message });
+  }
 });
 
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "index.html"));
+  res.sendFile(path.join(__dirname, "index.html"));
 });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Servidor Node.js corriendo en puerto ${PORT}`);
+  console.log(`Servidor Node.js corriendo en puerto ${PORT}`);
 });
