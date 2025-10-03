@@ -1,3 +1,8 @@
+/*
+ * @author David Bayona Lujan
+ * Servidor Node.js con Express que expone una API REST para
+ * guardar y obtener mediciones de sensores usando SQLite.
+ */
 const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");

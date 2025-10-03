@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.widget.LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,26 +8,26 @@
 
     <Button
         android:id="@+id/botonBuscarDispositivosBTLE"
-        android:text="Buscar Dispositivos BTLE nou 4"
-        android:onClick="botonBuscarDispositivosBTLEPulsado"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        />
+        android:layout_marginTop="200dp"
+        android:layout_marginBottom="16dp"
+        android:onClick="botonBuscarDispositivosBTLEPulsado"
+        android:text="Buscar Dispositivos BTLE"
+        app:layout_constraintBottom_toTopOf="@id/botonDetenerBusquedaDispositivosBTLE"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/botonDetenerBusquedaDispositivosBTLE"
-        android:text="Detener búsaqueda Dispositivos BTLE"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
         android:onClick="botonDetenerBusquedaDispositivosBTLEPulsado"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        />
+        android:text="Detener búsqueda Dispositivos BTLE"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/botonBuscarDispositivosBTLE" />
 
-    <Button
-        android:id="@+id/botonBuscarNuestroDispositivoBTLE"
-        android:text="Buscar nuestro dispositivo  BTLE"
-        android:onClick="botonBuscarNuestroDispositivoBTLEPulsado"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        />
-
-</android.widget.LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

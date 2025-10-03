@@ -1,7 +1,16 @@
+/*
+ * @author David Bayona Lujan
+ * Test automático de la clase Logica para comprobar que guardar y obtener
+ * la última medición funciona correctamente usando una base de datos en memoria.
+ */
 const Logica = require("./Logica.js");
 
+/*
+ * Crea una base de datos en memoria, inserta una medición y comprueba
+ * que la última medición devuelta coincide con los datos esperados usando async.
+ */
 async function testUltimaMedicion() {
-  const logica = new Logica("mediciones.db");
+  const logica = new Logica(":memory:");
 
   const esperado = {
     Tipo: "co2",
@@ -10,6 +19,22 @@ async function testUltimaMedicion() {
   };
 
   try {
+    await new Promise((resolve, reject) => {
+      logica.db.run(`
+        CREATE TABLE IF NOT EXISTS Mediciones (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          Tipo TEXT,
+          Valor INTEGER,
+          Contador INTEGER,
+          Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+      `, (err) => {
+        if (err) reject(err);
+        else resolve();
+      });
+    });
+
+    // Ahora ya puedes probar como antes
     const id = await logica.guardarMedicion(esperado);
     console.log(`✅ Medición insertada con ID: ${id}`);
 

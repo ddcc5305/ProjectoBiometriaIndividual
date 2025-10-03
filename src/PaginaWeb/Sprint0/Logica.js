@@ -1,7 +1,16 @@
+/*
+ * @author David Bayona Lujan
+ * Clase que maneja la base de datos SQLite para guardar y obtener
+ * mediciones de sensores. Proporciona métodos asincrónicos para inserción y consulta.
+ */
 const sqlite3 = require("sqlite3").verbose();
 const path = require("path");
 
 class Logica {
+   /*
+   * @constructor
+   * {string} : nombreBD
+   */
   constructor(nombreBD) {
     const rutaBD = path.resolve(nombreBD);
     this.db = new sqlite3.Database(rutaBD, (err) => {
@@ -21,6 +30,11 @@ class Logica {
     });
   }
 
+   /*
+   * Inserta una medición en la base de datos.
+   * {Object} : json - Tipo, Valor y Contador
+   * devuelve {Promise<number>} - ID de la fila insertada
+   */
   guardarMedicion(json) {
     return new Promise((resolve, reject) => {
       const tipo = json.tipo || json.Tipo;
@@ -55,6 +69,10 @@ class Logica {
     });
   }
 
+   /*
+   * Devuelve la última medición registrada en la base de datos.
+   * devuevle {Promise<Object>} - Objeto con los datos de la última medición
+   */
   obtenerUltimaMedicion() {
     return new Promise((resolve, reject) => {
       this.db.get(
