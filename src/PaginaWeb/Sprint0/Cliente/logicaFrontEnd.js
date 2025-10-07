@@ -9,7 +9,7 @@
  * Se llama desde el botón onclick="cargarUltima()" en index.html
  * fetch("/api/mediciones/ultima") --> obtener JSON --> actualizar innerHTML
  */
-async function cargarUltima() {
+async function obtenerUltimaMedicion() {
   try {
     const res = await fetch("/api/mediciones/ultima");
     if (!res.ok) throw new Error("Error cargando medición");
