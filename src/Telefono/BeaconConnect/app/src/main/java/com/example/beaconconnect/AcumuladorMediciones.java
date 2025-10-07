@@ -59,7 +59,7 @@ public class AcumuladorMediciones {
 
         double promedio = (double) lista.stream().mapToDouble(Double::doubleValue).average().orElse(0);
 
-        LogicaFake.agregarMedicion(tipo, promedio, contadorExterno);
+        LogicaFake.aguardarMedicion(tipo, promedio, contadorExterno);
 
         Log.d(ETIQUETA_LOG, ">>>> Se alcanzaron " + maxLecturas
                 + " lecturas de " + tipo

@@ -21,7 +21,7 @@ public class LogicaFake {
     // Agrega una medición con su sensor, el contador y la url a hacer peticion
     // String : tipo & R : Valor & N : contadorExterno -> acumularMedicion() -> enviarRest()
     //
-    public static void agregarMedicion(String tipo, double valor, double contador) {
+    public static void aguardarMedicion(String tipo, double valor, double contador) {
         LogicaFake logica = new LogicaFake(tipo, valor);
         logica.enviarRest(tipo, valor, contador);
     }
