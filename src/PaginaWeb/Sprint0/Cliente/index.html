@@ -24,22 +24,6 @@
     <div><span class="label">Timestamp:</span> --</div>
   </div>
 
-  <script>
-    async function cargarUltima() {
-      try {
-        const res = await fetch("/api/mediciones/ultima");
-        if (!res.ok) throw new Error("Error cargando medición");
-        const data = await res.json();
-        document.getElementById("salida").innerHTML = `
-          <div><span class="label">Tipo:</span> ${data.Tipo || "--"}</div>
-          <div><span class="label">Valor:</span> ${data.Valor || "--"}</div>
-          <div><span class="label">Contador:</span> ${data.Contador || "--"}</div>
-          <div><span class="label">Timestamp:</span> ${data.Timestamp || "--"}</div>
-        `;
-      } catch (err) {
-        alert(err.message);
-      }
-    }
-  </script>
+  <script src="logicaFrontEnd.js"></script>
 </body>
 </html>
