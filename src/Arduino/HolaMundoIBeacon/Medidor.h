@@ -28,23 +28,23 @@ public:
   // .....................................................
   // .....................................................
   int medirCO2() {
-	static int mediciones[5] = {230, 240, 235, 245, 225};
-    static int indice = 0;
+	  // static int mediciones[5] = {230, 240, 235, 245, 225};
+    // static int indice = 0;
 
-    int valor = mediciones[indice];
-    indice = (indice + 1) % 5; // pasamos al siguiente valor en ciclo
-    return valor;
+    // int valor = mediciones[indice];
+    // indice = (indice + 1) % 5;
+    return 235;
   } // ()
 
   // .....................................................
   // .....................................................
   int medirTemperatura() {
-	static int mediciones[5] = {-17, 32, 23, 42, -12};
-    static int indice = 0;
+	  // static int mediciones[5] = {-17, 32, 23, 42, -12};
+    // static int indice = 0;
 
-    int valor = mediciones[indice];
-    indice = (indice + 1) % 5; // pasamos al siguiente valor en ciclo
-    return valor;
+    // int valor = mediciones[indice];
+    // indice = (indice + 1) % 5;
+    return 23;
   } // ()
 	
 }; // class
