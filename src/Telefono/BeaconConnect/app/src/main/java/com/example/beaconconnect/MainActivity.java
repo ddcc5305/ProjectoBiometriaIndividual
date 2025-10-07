@@ -48,9 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ScanCallback callbackDelEscaneo = null;
 
-    //Peticion REST
-    private RestClient restClient;
-    String url = "https://dbayluj.upv.edu.es/api/mediciones";
+
 
     // Acumular mediciones
     private AcumuladorMediciones acumulador;
@@ -242,17 +240,6 @@ public class MainActivity extends AppCompatActivity {
     // --------------------------------------------------------------
     // --------------------------------------------------------------
     private void detenerBusquedaDispositivosBTLE() {
-
-        /* Ejemplo de POST
-        String url = "https://dbayluj.upv.edu.es/mediciones.php";
-        String cuerpoJson = "{ \"Tipo\": \"co2\", \"Valor\": 250, \"Contador\": 8, \"Timestamp\": \"2035-09-19\" }";
-
-        RestClient.hacerPeticion("POST", url, cuerpoJson, (codigo, cuerpo) -> {
-            Log.d("POST Medida", "Código: " + codigo + ", Respuesta: " + cuerpo);
-        });
-
-         */
-
         if ( this.callbackDelEscaneo == null ) {
             return;
         }
@@ -349,7 +336,7 @@ public class MainActivity extends AppCompatActivity {
         checkBluetoothPermissions();
         inicializarBlueTooth();
 
-        acumulador = new AcumuladorMediciones(numLecturas, url);
+        acumulador = new AcumuladorMediciones(numLecturas);
 
         Log.d(ETIQUETA_LOG, " onCreate(): termina ");
 

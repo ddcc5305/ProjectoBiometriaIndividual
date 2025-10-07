@@ -14,18 +14,16 @@ public class AcumuladorMediciones {
     private static final String ETIQUETA_LOG = ">>>>";
 
     private final int maxLecturas;
-    private final String url;
 
     private final Map<String, List<Double>> mediciones = new HashMap<>();
 
     private final Map<String, Double> ultimoContador = new HashMap<>();
 
     // Guarda el maxLecturas antes de calcular el promedio y enviar y la url del destino
-    // N : maxLecturas & String : url -> AcumuladorMediciones() -> N : maxLecturas & String : url (campos privados de la clase)
+    // N : maxLecturas -> AcumuladorMediciones() -> N : maxLecturas (campos privados de la clase)
     //
-    public AcumuladorMediciones(int maxLecturas, String url) {
+    public AcumuladorMediciones(int maxLecturas) {
         this.maxLecturas = maxLecturas;
-        this.url = url;
     }
 
     // Acumula una medición con su sensor y el contador
@@ -61,7 +59,7 @@ public class AcumuladorMediciones {
 
         double promedio = (double) lista.stream().mapToDouble(Double::doubleValue).average().orElse(0);
 
-        LogicaFake.agregarMedicion(tipo, promedio, contadorExterno, url);
+        LogicaFake.agregarMedicion(tipo, promedio, contadorExterno);
 
         Log.d(ETIQUETA_LOG, ">>>> Se alcanzaron " + maxLecturas
                 + " lecturas de " + tipo
